@@ -1,0 +1,14 @@
+Package: robustmeta
+Title: Robust random-effect meta-regression with dependent effect sizes
+Description: A package to implement the methods described in Hedges et al.
+    (2010) (doi: 10.1022/jrsm.5) for meta-analysis with dependent
+    effect-size estimates.
+Version: 0.1
+Author: Sean Anderson and Jarrett Byrnes
+Maintainer: Sean Anderson <sean@seananderson.ca>
+License: CC0
+Collate:
+    'coef.rrma.R'
+    'print.rrma.R'
+    'rrma.R'
+    'summary.rrma.R'
