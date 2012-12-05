@@ -56,19 +56,20 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   mf$drop.unused.levels <- TRUE
   mf[[1L]] <- as.name("model.frame")
   mf <- eval(mf, parent.frame())
-  mf <- data.frame(effect_size = mf[,1], model.matrix(formula, mf)[,-1], 
+  mf <- data.frame(effect_size = mf[,1], model.matrix(formula, mf), 
   					 study_id=mf[["(study_id)"]],
   					 var_eff_size=mf[["(var_eff_size)"]])
-  ind_var_names <- names(mf)[-c(1, match(c("study_id", "var_eff_size"), names(mf)))]
   names(mf) <- gsub("\\(", "", names(mf))
   names(mf) <- gsub("\\)", "", names(mf))
+  names(mf) <- gsub("X.Intercept.", "intercept", names(mf)) #for later use
+  ind_var_names <- names(mf)[-c(1, match(c("study_id", "var_eff_size"), names(mf)))]
   mf <- ddply(mf, "study_id", transform, k = length(study_id), 
     mean_v = mean(var_eff_size), s = sqrt(var_eff_size))
   mf <- ddply(mf, "study_id", transform, weights = 1/k * mean_v)
-  mf$intercept <- 1
+  #mf$intercept <- 1
   names(mf)[1] <- "effect_size"
   mf$study <- as.numeric(factor(mf$study_id))
-  names_design_matrix <- c("study", "intercept", ind_var_names)
+  names_design_matrix <- c("study",  ind_var_names)
   names_data_matrix <- c("study", "k", "mean_v", "weights", 
     "effect_size", "var_eff_size", "s")
 
