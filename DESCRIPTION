@@ -7,8 +7,15 @@ Version: 0.1
 Author: Sean Anderson and Jarrett Byrnes
 Maintainer: Sean Anderson <sean@seananderson.ca>
 License: CC0
+LazyData: true
 Collate:
     'coef.rrma.R'
     'print.rrma.R'
     'rrma.R'
     'summary.rrma.R'
+    'predict.rrma.R'
+    'residuals.rrma.R'
+    'vcov.rrma.R'
+    'plot.rrma.R'
+    'funnel.R'
+    'broad.R'
