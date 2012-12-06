@@ -79,5 +79,3 @@ predict.rrma <- function(object, newdata=NULL,
    return(data.frame(fit = pred, se.fit = se.fit, lwr = lwr, upr = upr))
 }
 
-# this should be re-written to also accept new data
-
