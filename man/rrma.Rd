@@ -39,7 +39,12 @@
 \examples{
 d <- data.frame(ln_OR = rnorm(10)*1:10, x = 1:10, study_id = c(rep(1,
 3), rep(2, 3), rep(3, 4)), var_eff = runif(10))
-m<-rrma(ln_OR ~ x, d, study_id, var_eff, rho = 0.5)
+m <- rrma(ln_OR ~ x, d, study_id, var_eff, rho = 0.5)
+
+data(broad)
+m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
+broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
+m
 }
 \author{
   Main body of code is from the appendix of Hedges et al.
