@@ -42,13 +42,14 @@ m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
 broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
 m
 
-pred <- predict(m, se.fit=T, interval="confidence")
+pred <- predict(m, se.fit=TRUE, interval="confidence")
 plot(lnorReg ~ d18OresidualMean.cent, data=broad)
-matplot(broad$d18OresidualMean.cent, pred$fit, col="red", lwd=2, add=T, type="l")
+matplot(broad$d18OresidualMean.cent, pred$fit, col="red", lwd=2,
+add=TRUE, type="l")
 
-idx <- sort(broad$d18OresidualMean.cent, index.return=T)$ix
+idx <- sort(broad$d18OresidualMean.cent, index.return=TRUE)$ix
 matplot(broad$d18OresidualMean.cent[idx], pred[idx,3:4],
-        type="l",lty=2, add=T, col="black")
+        type="l",lty=2, add=TRUE, col="black")
 }
 \author{
   Jarrett Byrnes and Sean Anderson
