@@ -35,10 +35,6 @@
 #' the robust coefficient estimates and standard errors.
 #'
 #' @examples
-#' d <- data.frame(ln_OR = rnorm(10)*1:10, x = 1:10, study_id = c(rep(1,
-#' 3), rep(2, 3), rep(3, 4)), var_eff = runif(10))
-#' m <- rrma(ln_OR ~ x, d, study_id, var_eff, rho = 0.5)
-#'
 #' data(broad)
 #' m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
 #' broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5) 
@@ -139,7 +135,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   sumXWeeWX.r <- 0
   for (i in (1:N)) { # now get estimated variance-covariance matrix using the robust residuals
     tab <- input_data[input_data$study == i, ]
-    sigma.hat.r <- tab$e.r %*% t(tab$e.r)
+    sigma.hat.r  <- tab$e.r %*% t(tab$e.r)
     W <- diag(tab$r.weights, tab$k[1])
     tab2 <- X_full[X_full$study == i, ]
     tab3 <- cbind(tab2[-c(1)])
@@ -157,11 +153,13 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   output <- data.frame(beta = labels, estimate = b.r, SE = SE) 
   
   #fill out the table with z-scores and CI information to match rma
+    crit <- qt(0.05/2, df=(N-(p+1)), lower.tail=FALSE )
+
   output <- cbind(output, with(output, data.frame(
-  	zval = estimate/SE,
-  	pval = pnorm(abs(estimate/SE), lower.tail=F)*2,
-  	ci.lb = estimate - 1.96*SE,
-  	ci.ub = estimate + 1.96*SE
+  	tval = estimate/SE,
+  	pval = pt(abs(estimate/SE), df = (N - (p + 1)), lower.tail=F)*2,
+  	ci.lb = estimate - crit*SE,
+  	ci.ub = estimate + crit*SE
   )))
   
   rownames(VR.r) <- colnames(VR.r) <- output[,1]
@@ -170,7 +168,8 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
               output, W=W, X_full = X_full, input_data=input_data,
               rho=rho, mf=mf, call=cl, n=nrow(input_data), pred =
               input_data$pred.r, res = input_data$e.r, k = N, yi =
-              input_data$effect_size, vi = input_data$var_eff_size)
+              input_data$effect_size, vi = input_data$var_eff_size,
+              df = N-(p+1), crit = crit)
   
   class(ret) <- "rrma"
   ret
