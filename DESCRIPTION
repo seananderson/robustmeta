@@ -19,3 +19,4 @@ Collate:
     'plot.rrma.R'
     'funnel.R'
     'broad.R'
+    'coefplot.R'
