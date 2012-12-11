@@ -89,11 +89,11 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
     X <- data.matrix(tab3) # convert to matrix
     dimnames(X) <- NULL # clean column and row names
     y <- cbind(tab$effect_size) # create effect_size vector
-    one <- cbind(rep(1, tab$k[1])) # a matrix of ones k times, yeeha
+    one <- cbind(rep(1, tab$k[1])) # a matrix of ones k times
     J <- one %*% t(one) # a k x k matrix of ones
     sigma <- (tab$s %*% t(tab$s)) # variance-covariance
-    vee <- diag(tab$s^2, tab$k[1]) # variance diagonals, that's all
-    SigmV <- sigma - vee # the covariance elements, that's all
+    vee <- diag(tab$s^2, tab$k[1]) # variance diagonals
+    SigmV <- sigma - vee # the covariance elements
     sumXWX <- sumXWX + t(X) %*% W %*% X # first half of equation 3
     sumXWy <- sumXWy + t(X) %*% W %*% y # second half of equation 3
     sumXWJWX <- sumXWJWX + t(X) %*% W %*% J %*% W %*% X # equation 4; needed for denominator of equation 15
@@ -112,7 +112,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   term1 <- (Qe - N + sum(diag(solve(sumXWX) %*% sumXWVWX)))/denom # part of equation 15
   term2 <- (sum(diag(solve(sumXWX) %*% sumXW.sig.m.v.WX)))/denom # part of equation 15
   tau.sq1 <- term1 + rho * term2 # the full equation 15
-  tau.sq <- ifelse(tau.sq1 < 0, 0, tau.sq1) # don't allow negative tau!
+  tau.sq <- ifelse(tau.sq1 < 0, 0, tau.sq1) # don't allow negative tau
   input_data$r.weights <- 1/(input_data$k * (input_data$mean_v + tau.sq)) # weights adjusted for tau.sq; [r]obust weights; equation 17
   sumXWX.r <- 0
   sumXWy.r <- 0
@@ -149,7 +149,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   for (i in (1:(p + 1))) { # now convert the variances (the diagonal) to standard errors
     SE[i] <- sqrt(VR.r[i, i]) * sqrt(N/(N - (p + 1)))
   }
-  labels <- names(X_full)[-1] # this and the next line modified by SA for output
+  labels <- names(X_full)[-1]
   output <- data.frame(beta = labels, estimate = b.r, SE = SE) 
   
   #fill out the table with z-scores and CI information to match rma
