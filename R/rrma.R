@@ -61,7 +61,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   ind_var_names <- names(mf)[-c(1, match(c("study_id", "var_eff_size"), names(mf)))]
   mf <- ddply(mf, "study_id", transform, k = length(study_id), 
     mean_v = mean(var_eff_size), s = sqrt(var_eff_size))
-  mf <- ddply(mf, "study_id", transform, weights = 1/k * mean_v)
+  mf <- ddply(mf, "study_id", transform, weights = 1/(k * mean_v))
   #mf$intercept <- 1
   names(mf)[1] <- "effect_size"
   mf$study <- as.numeric(factor(mf$study_id))
