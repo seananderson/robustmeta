@@ -22,26 +22,32 @@
 #' @param se.fit A switch indicating if standard errors are required.
 #' @param na.action function determining what should be done with 
 #' missing values in \code{newdata}. The default is to predict \code{NA}.
+#' @param level Tolerance/confidence interval
+#' @param interval Return a confidence interval?
 #' 
 #' @export
-#' @return A vector with predicted values or a data frame with predicted and error values
+#' @return For prediction without standard errors: a vector with
+#' predicted values;  for prediction with standard errors: a list with
+#' predicted values and standard error values; four prediction with
+#' confidence intervals: a data frame with the column names \code{fit,
+#' lwr, upr}.
 #'
 #' @examples
-#'
 #' data(broad)
 #' m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
 #' broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5) 
-#'
-#' pred <- predict(m, se.fit=TRUE, interval="confidence")
+#' 
+#' pred <- predict(m, interval = "confidence")
+#' 
 #' plot(lnorReg ~ d18OresidualMean.cent, data=broad)
 #' matplot(broad$d18OresidualMean.cent, pred$fit, col="red", lwd=2,
 #' add=TRUE, type="l")
-#'
-#'idx <- sort(broad$d18OresidualMean.cent, index.return=TRUE)$ix
-#' matplot(broad$d18OresidualMean.cent[idx], pred[idx,3:4], 
-#'         type="l",lty=2, add=TRUE, col="black")
+#' idx <- sort(broad$d18OresidualMean.cent, index.return=TRUE)$ix
+#' polygon(c(broad$d18OresidualMean.cent[idx],
+#' rev(broad$d18OresidualMean.cent[idx])), c(pred$lwr[idx],
+#' rev(pred$upr[idx])), col = "#00000020", border = NA)
 
-predict.rrma <- function(object, newdata=NULL, se.fit=FALSE, na.action=na.pass) {
+predict.rrma <- function(object, newdata=NULL, se.fit=FALSE, na.action=na.pass, level = 0.95, interval = c("none", "confidence")) {
 
   ret <- list()
   form <- as.formula(object$call$formula)
@@ -52,29 +58,26 @@ predict.rrma <- function(object, newdata=NULL, se.fit=FALSE, na.action=na.pass) 
   mm <- model.frame(form, newdata, na.action=na.action)
   X <- model.matrix(form, mm)
   	
-  	
   beta <- object$est[,2]
   	
   pred <- as.numeric(X %*% beta)
   names(pred) <- row.names(newdata)
-  if(!se.fit) return(pred)
-  #if(!se.fit & "none" %in% interval) return(pred)
+  #if(!se.fit) return(pred)
+  if(!se.fit & "none" %in% interval) return(pred)
   	
   se.fit <- as.numeric(diag(as.matrix(X) %*% tcrossprod(vcov(object), X)))
   	
-  #if("none" %in% interval) 
+  if("none" %in% interval) 
     return(list(fit = pred, se.fit = se.fit, df = object$df))
   	
-  #tfrac <- qt(1-(1-level)/2, nrow(object$input_data))
-  #lwr <- pred - tfrac* sqrt(se.fit)
-  #upr <- pred + tfrac* sqrt(se.fit)
+  tfrac <- qt(1-(1-level)/2, nrow(object$input_data))
+  lwr <- pred - tfrac* sqrt(se.fit)
+  upr <- pred + tfrac* sqrt(se.fit)
     
   #if("prediction" %in% interval) {
     #lwr <- lwr - tfrac*sqrt(object$tau_sq_est)[1,1] #added matrix notation to avoid odd error
     #upr <- upr + tfrac*sqrt(object$tau_sq_est)[1,1]
-    	
    #}
-    
-   #return(data.frame(fit = pred, se.fit = se.fit, lwr = lwr, upr = upr))
+   return(data.frame(fit = pred, se.fit = se.fit, lwr = lwr, upr = upr))
 }
 
