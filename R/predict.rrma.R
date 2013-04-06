@@ -1,9 +1,10 @@
 #' @name predict.rrma
 #' @title Predict method for robust meta-regression fits
+#' @export
 #' @S3method predict rrma
 #'
 #' @description
-#' \code{rrma} returns predicted values and error
+#' \code{predict.rrma} returns predicted values and error
 #' from robust variance meta-regression models 
 #' 
 #' @details predict.rrma is used to generate new predicted variables
@@ -25,7 +26,6 @@
 #' @param level Tolerance/confidence interval
 #' @param interval Return a confidence interval?
 #' 
-#' @export
 #' @return For prediction without standard errors: a vector with
 #' predicted values;  for prediction with standard errors: a list with
 #' predicted values and standard error values; four prediction with

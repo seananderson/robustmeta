@@ -31,8 +31,8 @@
   with the column names \code{fit, lwr, upr}.
 }
 \description{
-  \code{rrma} returns predicted values and error from
-  robust variance meta-regression models
+  \code{predict.rrma} returns predicted values and error
+  from robust variance meta-regression models
 }
 \details{
   predict.rrma is used to generate new predicted variables
