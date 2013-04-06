@@ -166,6 +166,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   )))
   
   rownames(VR.r) <- colnames(VR.r) <- output[,1]
+  input_data$study_id <- mf$study_id
 
   ret <- list(VR_r = VR.r, Qe = Qe, `tau_sq_est` = tau.sq, `est` =
               output, W=W, X_full = X_full, input_data=input_data,
