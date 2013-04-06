@@ -18,8 +18,10 @@
 #' Code adapted to an R package with a formula interface and various
 #' convenience functions by Sean Anderson and Jarrett Byrnes.
 #'
-#' @param formula The meta-regression formula of the form y ~ x1 +
-#' x2..., where y is the effect size.
+#' @param formula The meta-regression formula of the form \code{y ~ x1 +
+#' x2...}, where \code{y} is the effect size. An intercept only meta-analysis
+#' can be performed with \code{y ~ 1}. The intercept can be excluded with
+#' \code{y ~ -1 + x1 + x2 ...}
 #' @param data The input data frame. 
 #' @param study_id The study IDs. Can be in any form (character,
 #' numeric, factor). Will be converted to factor and then numeric form
@@ -84,7 +86,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   sumXW.sig.m.v.WX <- 0
   for (i in (1:N)) { # loop through each study
     tab <- input_data[input_data$study == i, ] # get the meta-analysis data for this study
-    W <- diag(tab$weights, tab$k[1]) # weights are 1 / k * mean_v
+    W <- diag(tab$weights, tab$k[1]) # weights are 1 / (k * mean_v)
     tab2 <- X_full[X_full$study == i, ] # design matrix for this study
     tab3 <- cbind(tab2[-c(1)]) # remove study column
     X <- data.matrix(tab3) # convert to matrix
