@@ -56,7 +56,8 @@ predict.rrma <- function(object, newdata=NULL, se.fit=FALSE, na.action=na.pass) 
   beta <- object$est[,2]
   	
   pred <- X %*% beta
-  if(!se.fit & "none" %in% interval) return(pred)
+  if(!se.fit) return(pred)
+  #if(!se.fit & "none" %in% interval) return(pred)
   	
   se.fit <- diag(as.matrix(X) %*% tcrossprod(vcov(object), X))
   	
