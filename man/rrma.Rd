@@ -5,8 +5,11 @@
   rrma(formula, data, study_id, var_eff_size, rho)
 }
 \arguments{
-  \item{formula}{The meta-regression formula of the form y
-  ~ x1 + x2..., where y is the effect size.}
+  \item{formula}{The meta-regression formula of the form
+  \code{y ~ x1 + x2...}, where \code{y} is the effect size.
+  An intercept only meta-analysis can be performed with
+  \code{y ~ 1}. The intercept can be excluded with \code{y
+  ~ -1 + x1 + x2 ...}}
 
   \item{data}{The input data frame.}
 
@@ -24,8 +27,9 @@
 \value{
   A list with the robust covariance matrix, the Qe
   statistic, the tau_sq estimate (variance between
-  studies), and a data frame of the robust coefficient
-  estimates and standard errors.
+  studies), a data frame of the robust coefficient
+  estimates and standard errors, and a number of
+  diagnostics and input values.
 }
 \description{
   \code{rrma} returns robust variance estimates from random
@@ -38,9 +42,8 @@
 }
 \examples{
 data(broad)
-m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
-broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
-m
+(m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
+broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5))
 }
 \author{
   Main body of code is from the appendix of Hedges et al.

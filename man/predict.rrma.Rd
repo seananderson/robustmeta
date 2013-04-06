@@ -3,8 +3,8 @@
 \title{Predict method for robust meta-regression fits}
 \usage{
   predict.rrma(object, newdata = NULL, se.fit = FALSE,
-    interval = c("none", "confidence", "prediction"),
-    na.action = na.pass, level = 0.95)
+    na.action = na.pass, level = 0.95,
+    interval = c("none", "confidence"))
 }
 \arguments{
   \item{object}{A meta-regression object of class
@@ -15,17 +15,20 @@
   \item{se.fit}{A switch indicating if standard errors are
   required.}
 
-  \item{interval}{Type of interval calculation.}
-
   \item{na.action}{function determining what should be done
   with missing values in \code{newdata}. The default is to
   predict \code{NA}.}
 
-  \item{level}{Tolerance/confidence level}
+  \item{level}{Tolerance/confidence interval}
+
+  \item{interval}{Return a confidence interval?}
 }
 \value{
-  A vector with predicted values or a data frame with
-  predicted and error values
+  For prediction without standard errors: a vector with
+  predicted values; for prediction with standard errors: a
+  list with predicted values and standard error values;
+  four prediction with confidence intervals: a data frame
+  with the column names \code{fit, lwr, upr}.
 }
 \description{
   \code{rrma} returns predicted values and error from
@@ -33,23 +36,23 @@
 }
 \details{
   predict.rrma is used to generate new predicted variables
-  and error from a data set.  Note incorporating study and
-  data point level variation is not yet implemented.
+  and error from a data set. Note that incorporating study
+  and data point level variation is not yet implemented.
 }
 \examples{
 data(broad)
 m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
 broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
-m
 
-pred <- predict(m, se.fit=TRUE, interval="confidence")
+pred <- predict(m, interval = "confidence")
+
 plot(lnorReg ~ d18OresidualMean.cent, data=broad)
 matplot(broad$d18OresidualMean.cent, pred$fit, col="red", lwd=2,
 add=TRUE, type="l")
-
 idx <- sort(broad$d18OresidualMean.cent, index.return=TRUE)$ix
-matplot(broad$d18OresidualMean.cent[idx], pred[idx,3:4],
-        type="l",lty=2, add=TRUE, col="black")
+polygon(c(broad$d18OresidualMean.cent[idx],
+rev(broad$d18OresidualMean.cent[idx])), c(pred$lwr[idx],
+rev(pred$upr[idx])), col = "#00000020", border = NA)
 }
 \author{
   Jarrett Byrnes and Sean Anderson
