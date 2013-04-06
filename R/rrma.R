@@ -31,6 +31,7 @@
 #' study including correlation induced by the random effects. Hedges
 #' et al. (2010) suggest conducting a sensitivity analysis on
 #' \code{rho}.
+#' @param level Tolerance/confidence interval
 #' 
 #' @export
 #' @return A list with the robust covariance matrix, the Qe statistic,
@@ -43,7 +44,7 @@
 #' (m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
 #' broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5))
 #'
-rrma <- function(formula, data, study_id, var_eff_size, rho) {
+rrma <- function(formula, data, study_id, var_eff_size, rho, level = 0.05) {
 # [r]obust [r]andom effect [m]eta-[a]nalysis regression Hedges et al. 2010
 # code to parse the formula and create the required data structure:
   require(plyr) # using plyr to save time because I already coded it this way
@@ -156,7 +157,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   output <- data.frame(beta = labels, estimate = b.r, SE = SE) 
   
   #fill out the table with z-scores and CI information to match rma
-    crit <- qt(0.05/2, df=(N-(p+1)), lower.tail=FALSE )
+    crit <- qt(level/2, df=(N-(p+1)), lower.tail=FALSE )
 
   output <- cbind(output, with(output, data.frame(
   	tval = estimate/SE,
@@ -165,7 +166,7 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   	ci.ub = estimate + crit*SE
   )))
   
-  rownames(VR.r) <- colnames(VR.r) <- output[,1]
+  rownames(VR.r) <- colnames(VR.r) <- output[,2]
   input_data$study_id <- mf$study_id
 
   ret <- list(VR_r = VR.r, Qe = Qe, `tau_sq_est` = tau.sq, `est` =
