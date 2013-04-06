@@ -11,6 +11,7 @@
 #' Res. Synth. Method., 1, 39-65.  
 #' 
 #' @export plot rrma
+#' @S3method plot rrma
 #' 
 #' @examples
 #' data(broad)
