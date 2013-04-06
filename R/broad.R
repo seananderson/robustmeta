@@ -4,7 +4,6 @@
 #'
 #' @name broad
 #' @docType data
-#' @author Sean Anderson <sean@@seananderson.ca>
 #' @keywords data
 NULL
 
