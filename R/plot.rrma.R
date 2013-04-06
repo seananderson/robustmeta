@@ -10,7 +10,7 @@
 #' estimation in meta-regression with dependent effect_size estimates.
 #' Res. Synth. Method., 1, 39-65.  
 #' 
-#' @S3method plot rrma
+#' @export plot rrma
 #' 
 #' @examples
 #' data(broad)
