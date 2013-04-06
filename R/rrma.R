@@ -17,6 +17,7 @@
 #' (2010) and written by the paper authors.
 #' Code adapted to an R package with a formula interface and various
 #' convenience functions by Sean Anderson and Jarrett Byrnes.
+#'
 #' @param formula The meta-regression formula of the form y ~ x1 +
 #' x2..., where y is the effect size.
 #' @param data The input data frame. 
@@ -31,14 +32,14 @@
 #' 
 #' @export
 #' @return A list with the robust covariance matrix, the Qe statistic,
-#' the tau_sq estimate (variance between studies), and a data frame of
-#' the robust coefficient estimates and standard errors.
+#' the tau_sq estimate (variance between studies), a data frame of
+#' the robust coefficient estimates and standard errors, and a number
+#' of diagnostics and input values.
 #'
 #' @examples
 #' data(broad)
-#' m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
-#' broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5) 
-#' m
+#' (m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
+#' broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5))
 #'
 rrma <- function(formula, data, study_id, var_eff_size, rho) {
 # [r]obust [r]andom effect [m]eta-[a]nalysis regression Hedges et al. 2010
@@ -174,9 +175,4 @@ rrma <- function(formula, data, study_id, var_eff_size, rho) {
   class(ret) <- "rrma"
   ret
 }
-
-#load("../../broadData_noNas.rda")
-#m.rrma <- rrma_hedges(formula = lnorReg ~ 1, data = broadData_noNAs, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
-#m.rma <- rma(lnorReg, vi = vlnorReg, data = broadData_noNAs, method = "HE")  
-#m.rma
 
