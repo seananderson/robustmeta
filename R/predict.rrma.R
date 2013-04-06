@@ -55,14 +55,15 @@ predict.rrma <- function(object, newdata=NULL, se.fit=FALSE, na.action=na.pass) 
   	
   beta <- object$est[,2]
   	
-  pred <- X %*% beta
+  pred <- as.numeric(X %*% beta)
+  names(pred) <- row.names(newdata)
   if(!se.fit) return(pred)
   #if(!se.fit & "none" %in% interval) return(pred)
   	
-  se.fit <- diag(as.matrix(X) %*% tcrossprod(vcov(object), X))
+  se.fit <- as.numeric(diag(as.matrix(X) %*% tcrossprod(vcov(object), X)))
   	
   #if("none" %in% interval) 
-    return(data.frame(fit = pred, se.fit = se.fit))
+    return(list(fit = pred, se.fit = se.fit, df = object$df))
   	
   #tfrac <- qt(1-(1-level)/2, nrow(object$input_data))
   #lwr <- pred - tfrac* sqrt(se.fit)
