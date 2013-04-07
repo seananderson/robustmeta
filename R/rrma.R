@@ -174,9 +174,12 @@ rrma <- function(formula, data, study_id, var_eff_size, rho, level = 0.05) {
               rho=rho, mf=mf, call=cl, n=nrow(input_data), pred =
               input_data$pred.r, res = input_data$e.r, k = N, yi =
               input_data$effect_size, vi = input_data$var_eff_size,
-              df = N-(p+1), crit = crit)
+              df = N-(p+1), crit = crit, level = level, individual_weights = 1/input_data$var_eff_size, weights = input_data$weights, robust_weights = input_data$r.weights)
   
   class(ret) <- "rrma"
   ret
 }
 
+ data(broad)
+ m <- rrma(formula = lnorReg ~ d18OresidualMean.cent, data =
+ broad, study_id = study.ID, var_eff = vlnorReg, rho = 0.5)
